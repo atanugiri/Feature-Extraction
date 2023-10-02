@@ -78,9 +78,9 @@ else
     end
 end
 
-% %% Plot figure
-% h = trajectoryPlot(id);
-% fig_name = sprintf('passingCentralZone id_%d',id);
+%% Plot figure
+h = trajectoryPlot(id);
+fig_name = sprintf('passingCentralZone id_%d',id);
 % print(h,fig_name,'-dpng','-r400');
 % savefig(h,sprintf('%s.fig',fig_name));
 end
