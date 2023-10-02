@@ -85,15 +85,15 @@ for method = 1:numel(windowSize)
     stopTime(method) = 0.1*stoppingPts;
 end
 
-% % Plot data
-% h = trajectoryPlot(id);
-% hold on;
-% methodNo = 6;
-% scatter(X(bulbIndexes{methodNo}),Y(bulbIndexes{methodNo}),20,"filled",'MarkerFaceColor',[1 0.4 0.6]);
-% title('Stopping Points in Baseline Trajectory',Interpreter='latex');
-% legendObj = findobj(h,'Type','Legend');
-% legendObj.String{6} = 'stopping points';
-% figName = sprintf('stop_time_%d',id);
-% savefig(h,sprintf('%s.fig',figName));
-% print(h,figName,'-dpng','-r400');
+%% Plot data
+h = trajectoryPlot(id);
+hold on;
+methodNo = 6;
+scatter(X(bulbIndexes{methodNo}),Y(bulbIndexes{methodNo}),20,"filled",'MarkerFaceColor',[1 0.4 0.6]);
+title('Stopping Points in Baseline Trajectory',Interpreter='latex');
+legendObj = findobj(h,'Type','Legend');
+legendObj.String{6} = 'stopping points';
+figName = sprintf('stop_time_%d',id);
+savefig(h,sprintf('%s.fig',figName));
+print(h,figName,'-dpng','-r400');
 end
