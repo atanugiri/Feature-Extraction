@@ -122,22 +122,22 @@ jerkOutlierGesd = nnz(isoutlier(jerknessFilter,"gesd"));
 % calculate jerkness outlier by threshold
 jerkOutlierThreshold = nnz(isoutlier(jerknessFilter,"percentiles",[30 70]));
 
-% %% Plot data
-% h = figure;
-% plot(accelarationTable.coordinatetimes2,accelarationTable.accelaration,'b','LineWidth',1.5);
-% hold on;
-% % myFilter = isoutlier(accelaration_filt,"movmedian",5);
-% myFilter = isoutlier(accelaration_filt);
-% % indexes = find(min_accelaration | max_accelaration);
-% % myFilter = indexes(logicalBigAcceleration);
+%% Plot data
+h = figure;
+plot(accelarationTable.coordinatetimes2,accelarationTable.accelaration,'b','LineWidth',1.5);
+hold on;
+% myFilter = isoutlier(accelaration_filt,"movmedian",5);
+myFilter = isoutlier(accelaration_filt);
+% indexes = find(min_accelaration | max_accelaration);
+% myFilter = indexes(logicalBigAcceleration);
 % plot(accelarationTable.coordinatetimes2(myFilter), ...
 %     accelarationTable.accelaration(myFilter),'r.','MarkerSize',20);
-% ylim([-4000 3000]);
-% xlabel('Time',Interpreter='latex',FontSize=14);
-% ylabel('Acceleration',Interpreter='latex',FontSize=14);
-% title('Acceleration Outliers Per Unit Travel in Baseline',Interpreter='latex');
-% fig_name = sprintf('accOutler id_%d',id);
-% % print(h,fig_name,'-dpng','-r400');
-% % savefig(h,sprintf('%s.fig',fig_name));
+ylim([-4000 3000]);
+xlabel('Time',Interpreter='latex',FontSize=14);
+ylabel('Acceleration',Interpreter='latex',FontSize=14);
+title('Acceleration Outliers Per Unit Travel in Baseline',Interpreter='latex');
+fig_name = sprintf('accOutler id_%d',id);
+% print(h,fig_name,'-dpng','-r400');
+% savefig(h,sprintf('%s.fig',fig_name));
 
 end
