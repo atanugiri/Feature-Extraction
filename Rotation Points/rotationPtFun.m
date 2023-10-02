@@ -65,24 +65,24 @@ for method = 1:numel(windowSize)
 
 
     %% Plot rotation points
-%     rotationIndex = ones(max(labeledBulb),1);
-%     for kk = 1:max(labeledBulb)
-%         rotationIndex(kk) = find(labeledBulb == kk, 1);
-%     end
-%     h = figure;
-%     time = cleanedDataWithTone.t(mask);
-%     quiver(time,zeros(size(time)),cosd(direction),sind(direction), ...
-%         'LineWidth',1.5,'MaxHeadSize',0.5,'AutoScale','on');
-%     hold on;
-%     plot(time(rotationIndex),zeros(length(rotationIndex),1),'r.','MarkerSize',20);
-%     quiver(time(rotationIndex), zeros(size(time(rotationIndex))), ...
-%         cosd(direction(rotationIndex)), sind(direction(rotationIndex)), ...
-%         'Color','r','LineWidth',1.5);
-%     xlabel('Time','Interpreter','latex',FontSize=14);
-%     ylabel('Magnitude','Interpreter','latex',FontSize=14);
-% %     xlim([-2 22]); ylim([-5 5]);
-%     title('Rotation Points in Female',Interpreter='latex');
-%     figName = sprintf('rotation_points_%d',id);
+    rotationIndex = ones(max(labeledBulb),1);
+    for kk = 1:max(labeledBulb)
+        rotationIndex(kk) = find(labeledBulb == kk, 1);
+    end
+    h = figure;
+    time = cleanedDataWithTone.t(mask);
+    quiver(time,zeros(size(time)),cosd(direction),sind(direction), ...
+        'LineWidth',1.5,'MaxHeadSize',0.5,'AutoScale','on');
+    hold on;
+    plot(time(rotationIndex),zeros(length(rotationIndex),1),'r.','MarkerSize',20);
+    quiver(time(rotationIndex), zeros(size(time(rotationIndex))), ...
+        cosd(direction(rotationIndex)), sind(direction(rotationIndex)), ...
+        'Color','r','LineWidth',1.5);
+    xlabel('Time','Interpreter','latex',FontSize=14);
+    ylabel('Magnitude','Interpreter','latex',FontSize=14);
+%     xlim([-2 22]); ylim([-5 5]);
+    title('Rotation Points in Female',Interpreter='latex');
+    figName = sprintf('rotation_points_%d',id);
 %     savefig(h,sprintf('%s.fig',figName));
 %     print(h,figName,'-dpng','-r400');
 end
