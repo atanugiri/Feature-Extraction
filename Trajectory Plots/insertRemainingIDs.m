@@ -42,18 +42,3 @@ for i = 1:length(idList)
     end
 end
 
-%% Description of fetchIDs
-function DataInRange = fetchIDs(dataTable)
-try
-dataTable.referencetime = datetime(dataTable.referencetime, 'Format', 'MM/dd/yyyy');
-dataTable = sortrows(dataTable, 'referencetime');
-catch
-    fprintf();
-end
-startDate = datetime('11/05/2021', 'InputFormat', 'MM/dd/yyyy');
-endDate = datetime('02/16/2023', 'InputFormat', 'MM/dd/yyyy');
-endDate = endDate + days(1);
-
-DataInRange = dataTable(dataTable.referencetime >= startDate & dataTable.referencetime <= endDate, :);
-end
-
