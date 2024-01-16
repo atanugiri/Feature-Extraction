@@ -8,7 +8,13 @@ loadFile = load("emptyIDs.mat");
 emptyIDs = loadFile.emptyIDs;
 idList = emptyIDs.id;
 
-tableName = 'ghrelin_featuretable';
+% alterQuery = "ALTER TABLE featuretable2 " + ...
+% "ALTER COLUMN norm_x TYPE DOUBLE PRECISION[] " + ...
+% "USING norm_x::DOUBLE PRECISION[]";
+% exec(conn,alterQuery);
+
+
+tableName = 'featuretable2';
 
 for index = 1:10000
     id = idList(index);
