@@ -1,27 +1,16 @@
 % Author: Atanu Giri
 % Date: 12/11/2023
 
-% clear; clc;
 datasource = 'live_database';
 conn = database(datasource,'postgres','1234');
 
-% live_table ids in the the date range
-ltq = "SELECT id, referencetime FROM live_table ORDER BY id";
-ltd = fetch(conn, ltq);
-ltDataInRange = fetchIDs(ltd);
-ltIDs = ltDataInRange.id;
-
-% featuretable2 ids in the the date range
-ftq = "SELECT id, referencetime FROM featuretable2 ORDER BY id";
-ftd = fetch(conn, ftq);
-ftDataInRange = fetchIDs(ftd);
-ftIDs = ftDataInRange.id;
-
-idList = setdiff(ltIDs, ftIDs);
+loadFile = load("emptyIDs.mat");
+emptyIDs = loadFile.emptyIDs;
+idList = emptyIDs.id;
 
 tableName = 'ghrelin_featuretable';
 
-for index = 1:length(idList)
+for index = 1:10000
     id = idList(index);
     try
         [normT, normX, normY] = extractNormalizedCoordinate(id);
