@@ -31,6 +31,7 @@ liveTableQuery = sprintf("SELECT id, subjectid, trialname, referencetime, " + ..
 liveTableData = fetch(conn, liveTableQuery);
 subject_data = innerjoin(liveTableData, subject_data, 'Keys', 'id');
 
+try
 subject_data.playstarttrialtone = str2double(subject_data.playstarttrialtone);
 if isnan(subject_data.playstarttrialtone)
     subject_data.playstarttrialtone = 2;
@@ -190,6 +191,10 @@ else
     velocityAfterExitTimeStamp = nan;
     distanceAfterExitTimeStampUntilLimitingTimeStamp = nan;
     velocityAfterExitTimeStampUntilLimitingTimeStamp = nan;
+end
+
+catch
+    fprintf("Calculation error in %d: %s\n", id);
 end
 
 % %% If need to plot data
