@@ -16,40 +16,51 @@ function [id,entryTime,exitTime,logicalApproach,distanceBeforeTone, ...
     velocityAfterExitTimeStampUntilLimitingTimeStamp] = entryExitTimeStampFun(id)
 
 close all; clc;
-
-% id = 1;
+% id = 250690;
 % make connection with database
 datasource = 'live_database';
 conn = database(datasource,'postgres','1234');
-query = sprintf("SELECT id, norm_t, " + ...
-    "norm_x, norm_y FROM featuretable2 WHERE id = %d", id);
+% write query
+query = sprintf("SELECT id, subjectid, trialname, referencetime, " + ...
+    "playstarttrialtone, coordinatetimes2, xcoordinates2, " + ...
+    "ycoordinates2, mazenumber, feeder FROM live_table WHERE id = %d;", id);
 subject_data = fetch(conn,query);
+% close(conn);
+%% convert all table entries from string to usable format
+    function fn_subject_data()
+        % convert char to double: playstarttrialtone and feeder
+        subject_data.playstarttrialtone = str2double(subject_data.playstarttrialtone);
+        subject_data.feeder = str2double(subject_data.feeder);
+        % remove space from mazenumber
+        subject_data.mazenumber = char(lower(strrep(subject_data.mazenumber,' ','')));
+        %%
+        % Accessing PGArray data as double
+        %
+        for column = 6:8
+            stringAllRows = string(subject_data.(column));
+            regAllRows = regexprep(stringAllRows,'{|}','');
+            splitAllRows = split(regAllRows,',');
+            doubleData = str2double(splitAllRows);
+            subject_data.(column){1} = doubleData;
+        end
+    end
+fn_subject_data();
 
-liveTableQuery = sprintf("SELECT id, subjectid, trialname, referencetime, " + ...
-    "playstarttrialtone, mazenumber, feeder " + ...
-    "FROM live_table WHERE id = %d", id);
-liveTableData = fetch(conn, liveTableQuery);
-subject_data = innerjoin(liveTableData, subject_data, 'Keys', 'id');
+% includes the data before playstarttrialtone
+subject_data_table_with_tone = table(subject_data.coordinatetimes2{1}, ...
+    subject_data.xcoordinates2{1},subject_data.ycoordinates2{1}, ...
+    'VariableNames',{'coordinatetimes2','xcoordinates2', 'ycoordinates2'});
+% invoke coordinateNormalization function to normalize the coordinates
+[xWithTone, yWithTone] = coordinateNormalization(subject_data_table_with_tone.xcoordinates2, ...
+    subject_data_table_with_tone.ycoordinates2,id);
 
-try
-subject_data.playstarttrialtone = str2double(subject_data.playstarttrialtone);
-if isnan(subject_data.playstarttrialtone)
-    subject_data.playstarttrialtone = 2;
-end
-subject_data.feeder = str2double(subject_data.feeder);
-% remove space from mazenumber
-subject_data.mazenumber = char(lower(strrep(subject_data.mazenumber,' ','')));
-
-% Accessing PGArray data as double
-for column = size(subject_data,2) - 2:size(subject_data,2)
-    stringAllRows = string(subject_data.(column));
-    regAllRows = regexprep(stringAllRows,'{|}','');
-    splitAllRows = split(regAllRows,',');
-    doubleData = str2double(splitAllRows);
-    subject_data.(column){1} = doubleData;
-end
-cleanedDataWithTone = table(subject_data.norm_t{1},subject_data.norm_x{1}, ...
-    subject_data.norm_y{1}, 'VariableNames',{'t','X','Y'});
+% remove nan entries
+badDataWithTone = table(subject_data_table_with_tone.coordinatetimes2,xWithTone,yWithTone, ...
+    'VariableNames',{'t','X','Y'});
+cleanedDataWithTone = badDataWithTone;
+% Find the rows with NaN values
+idx = all(isfinite(cleanedDataWithTone{:,:}),2);
+cleanedDataWithTone = cleanedDataWithTone(idx,:);
 
 %%
 % set playstarttrialtone and exclude the data before playstarttrialtone
@@ -191,10 +202,6 @@ else
     velocityAfterExitTimeStamp = nan;
     distanceAfterExitTimeStampUntilLimitingTimeStamp = nan;
     velocityAfterExitTimeStampUntilLimitingTimeStamp = nan;
-end
-
-catch
-    fprintf("Calculation error in %d: %s\n", id);
 end
 
 % %% If need to plot data
