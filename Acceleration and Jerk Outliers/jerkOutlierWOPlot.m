@@ -8,9 +8,9 @@ function [id,totalRunningTime,accOutlierMethod1, bigAcceleration, accOutlierMedi
     accOutlierQuartiles,accOutlierGrubbs,accOutlierGesd,accOutlierThreshold, ...
     jerkOutlierMethod1,bigJerkness,jerkOutlierMedian,jerkOutlierMoveMedian,jerkOutlierMean, ...
     jerkOutlierQuartiles,jerkOutlierGrubbs,jerkOutlierGesd, ...
-    jerkOutlierThreshold] = jerkOutlierWOPlot(id)
+    jerkOutlierThreshold, varargout] = jerkOutlierWOPlot(id)
 close all; clc;
-% id = 91864;
+% id = 4985;
 % make connection with database
 datasource = 'live_database';
 conn = database(datasource,'postgres','1234');
@@ -126,18 +126,17 @@ jerkOutlierThreshold = nnz(isoutlier(jerknessFilter,"percentiles",[30 70]));
 h = figure;
 plot(accelarationTable.coordinatetimes2,accelarationTable.accelaration,'b','LineWidth',1.5);
 hold on;
-% myFilter = isoutlier(accelaration_filt,"movmedian",5);
-myFilter = isoutlier(accelaration_filt);
-% indexes = find(min_accelaration | max_accelaration);
-% myFilter = indexes(logicalBigAcceleration);
-% plot(accelarationTable.coordinatetimes2(myFilter), ...
-%     accelarationTable.accelaration(myFilter),'r.','MarkerSize',20);
-ylim([-4000 3000]);
-xlabel('Time',Interpreter='latex',FontSize=14);
-ylabel('Acceleration',Interpreter='latex',FontSize=14);
-title('Acceleration Outliers Per Unit Travel in Baseline',Interpreter='latex');
-fig_name = sprintf('accOutler id_%d',id);
-% print(h,fig_name,'-dpng','-r400');
-% savefig(h,sprintf('%s.fig',fig_name));
+myFilter = isoutlier(accelaration_filt,"movmedian",5);
+% myFilter = isoutlier(accelaration_filt);
+% % indexes = find(min_accelaration | max_accelaration);
+% % myFilter = indexes(logicalBigAcceleration);
+accOutlierTime = accelarationTable.coordinatetimes2(myFilter);
+plot(accOutlierTime, accelarationTable.accelaration(myFilter),'r.','MarkerSize',20);
+xlim([2, 20]);
+% xlabel('Time',Interpreter='latex',FontSize=14);
+% ylabel('Acceleration',Interpreter='latex',FontSize=14);
+% title('Acceleration Outliers Per Unit Travel in Baseline',Interpreter='latex');
 
+varargout{1} = h;
+varargout{2} = accOutlierTime;
 end
