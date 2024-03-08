@@ -5,7 +5,7 @@
 
 %% This function call coordinateNormalization and mazeMethods functions.
 
-function h = trajectoryPlot(id)
+function h = trajectoryPlot(id, varargin)
 close all; clc;
 % id = 102377;
 % make connection with database
@@ -98,6 +98,15 @@ ylabel('y(Normalized)',Interpreter='latex',FontSize=14);
 % title of graph
 sgtitle(sprintf('trajectory id:%d',id));
 fig_name = sprintf('trajectory id_%d',id);
-print(h,fig_name,'-dpng','-r400');
+% print(h,fig_name,'-dpng','-r400');
 % savefig(h,sprintf('%s.fig',fig_name));
+
+if numel(varargin) >= 1
+    accOutlier = varargin{1};
+    idx = ismember(subject_data_table_with_tone.coordinatetimes2, accOutlier);
+    x_outlier = xWithTone(idx);
+    y_outlier = yWithTone(idx);
+    scatter(x_outlier, y_outlier, 'filled','red');
+end
+
 end
